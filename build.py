@@ -209,7 +209,10 @@ REGIONS = {
            r"menlo park|sunnyvale|san jose|washington,? dc|chicago|denver|atlanta|miami|bay area|"
            r",\s*(ca|ny|wa|tx|ma|il|ga|va|nj|nc|fl))\b",
     "Canada": r"\b(canada|toronto|montreal|vancouver|ottawa|waterloo)\b",
-    "Asia-Pacific": r"\b(singapore|tokyo|japan|seoul|korea|sydney|melbourne|australia|hong kong|taipei|taiwan|apac)\b",
+    "Australia": r"\b(australia|sydney|melbourne(?!,?\s*fl)|brisbane|perth(?!,?\s*(uk|scotland))|adelaide|canberra|hobart|darwin|"
+                 r"gold coast|new south wales|nsw|victoria,?\s*au|queensland|qld|au)\b",
+    "Asia-Pacific": r"\b(singapore|tokyo|japan|seoul|korea|hong kong|taipei|taiwan|apac|new zealand|auckland|"
+                    r"manila|philippines|jakarta|indonesia|kuala lumpur|malaysia|bangkok|thailand|vietnam)\b",
 }
 
 
@@ -219,6 +222,11 @@ def tag(job, company):
     remote = job["remote_flag"] or bool(re.search(r"\bremote\b", where, re.I))
     cat = next((name for name, rx in CATEGORIES if re.search(rx, title, re.I)), "Other IT roles")
     regions = [r for r, rx in REGIONS.items() if re.search(rx, where, re.I)]
+    if "Australia" in regions:
+        if re.search(r"\bperth,?\s*wa\b", where, re.I) and not re.search(r"united states|usa", where, re.I):
+            regions = [r for r in regions if r != "USA"]  # Perth, WA is Western Australia
+        if "Asia-Pacific" not in regions:
+            regions.append("Asia-Pacific")
     return {
         "t": title.strip(), "c": company["name"], "l": where or ("Remote" if remote else "Not stated"),
         "g": regions, "rm": remote, "k": cat, "ai": bool(AI_ROLE.search(title)), "d": job["date"],

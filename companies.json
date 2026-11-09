@@ -71,6 +71,21 @@
     {"name": "Monzo", "slug": "monzo"},
     {"name": "Wise", "slug": "wise"},
     {"name": "Deliveroo", "slug": "deliveroo"},
-    {"name": "State Street", "workday": "https://statestreet.wd1.myworkdayjobs.com/Global"}
+    {"name": "State Street", "workday": "https://statestreet.wd1.myworkdayjobs.com/Global"},
+    {"name": "Culture Amp", "slug": "cultureamp"},
+    {"name": "SafetyCulture", "slug": "safetyculture"},
+    {"name": "Airwallex", "slug": "airwallex"},
+    {"name": "Employment Hero", "slug": "employmenthero"},
+    {"name": "Linktree", "slug": "linktree"},
+    {"name": "Rokt", "slug": "rokt"},
+    {"name": "Immutable", "slug": "immutable"},
+    {"name": "Deputy", "slug": "deputy"},
+    {"name": "Octopus Deploy", "slug": "octopusdeploy"},
+    {"name": "Buildkite", "slug": "buildkite"},
+    {"name": "Go1", "slug": "go1"},
+    {"name": "Envato", "slug": "envato"},
+    {"name": "Tyro", "slug": "tyro"},
+    {"name": "Eucalyptus", "slug": "eucalyptus"},
+    {"name": "Leonardo.Ai", "slug": "leonardo"}
   ]
 }
