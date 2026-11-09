@@ -1,4 +1,4 @@
-/* AI Jobs: search and filters, all in the browser. No cookies, no tracking. */
+/* IT Jobs: search and filters, all in the browser. No cookies, no tracking. */
 (() => {
   const $ = (s) => document.querySelector(s);
   const E = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -112,7 +112,7 @@
     $("#stats").innerHTML = `<b>${data.count.toLocaleString("en-IE")}</b> jobs from <b>${live.length}</b> companies · updated ${upd.toLocaleDateString("en-IE", { day: "numeric", month: "short" })}, ${upd.toLocaleTimeString("en-IE", { hour: "2-digit", minute: "2-digit" })}`;
     $("#sources").textContent = `Companies included: ${live.map((c) => c.name).join(", ")}.`;
 
-    const cats = [...new Set(all.map((j) => j.k))].sort((a, b) => (a === "Other roles") - (b === "Other roles") || a.localeCompare(b));
+    const cats = [...new Set(all.map((j) => j.k))].sort((a, b) => (a === "Other IT roles") - (b === "Other IT roles") || a.localeCompare(b));
     $("#cat").innerHTML += cats.map((c) => `<option>${E(c)}</option>`).join("");
     $("#co").innerHTML += live.map((c) => c.name).sort((a, b) => a.localeCompare(b)).map((c) => `<option>${E(c)}</option>`).join("");
 

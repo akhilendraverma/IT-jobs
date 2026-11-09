@@ -1,4 +1,4 @@
-"""AI Jobs: collects AI jobs from companies' public job boards and writes docs/jobs.json.
+"""IT Jobs: collects IT and tech jobs from companies' public job boards and writes docs/jobs.json.
 
 Sources (public, no login, meant for showing a company's jobs elsewhere):
   Greenhouse  https://boards-api.greenhouse.io/v1/boards/<slug>/jobs?content=true
@@ -22,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "docs" / "jobs.json"
 SOURCES = ROOT / "sources.json"  # remembers which job board each company uses
-UA = {"User-Agent": "AIJobsAggregator/1.0 (+https://github.com/akhilendraverma)", "Accept": "application/json"}
+UA = {"User-Agent": "ITJobsAggregator/1.0 (+https://github.com/akhilendraverma)", "Accept": "application/json"}
 
 
 # ---------------------------------------------------------------- fetching
@@ -59,7 +59,7 @@ def text_of(raw):
     return re.sub(r"\s+", " ", html.unescape(t)).strip()
 
 
-def snippet(raw, n=240):
+def snippet(raw, n=200):
     t = text_of(raw)
     if len(t) <= n:
         return t
@@ -110,13 +110,30 @@ AI_ROLE = re.compile(
     r"data scien\w*|applied scien\w*|research scien\w*|generative|reinforcement learning|neural|perception|inference|"
     r"agentic|foundation models?|large language|speech recognition|robot\w*|research engineer|alignment|interpretab\w*)\b", re.I)
 
+IT_ROLE = re.compile(
+    r"engineer|developer|programmer|software|devops|\bsre\b|site reliability|cloud|infrastructure|platform|security|cyber|"
+    r"\bdata\b|analytics|business intelligence|\bbi\b|database|\bdba\b|systems? analyst|business analyst|machine learning|\bml\b|"
+    r"\bqa\b|quality assurance|\btest|sdet|automation|help ?desk|service desk|desktop support|technical support|sysadmin|"
+    r"system administrator|network|architect|technical program|technical project|\btpm\b|product manager|product owner|"
+    r"product designer|\bux\b|\bui\b|scrum|mobile|\bios\b|android|front[- ]?end|back[- ]?end|full[- ]?stack|\bweb\b|"
+    r"firmware|embedded|solutions? (engineer|architect|consultant)|implementation|salesforce|\bsap\b|\berp\b|(?-i:\bIT\b)", re.I)
+NOT_IT = re.compile(
+    r"recruit|talent|sourcer|account executive|account manager|sales development|business development|counsel|legal|"
+    r"accountant|payroll|executive assistant|mechanical|civil|chemical|manufacturing|facilities|construction|"
+    r"office manager|marketing manager|content (writer|marketing)", re.I)
+
 CATEGORIES = [
-    ("Research", r"\bresearch(er)?\b"),
-    ("Data", r"\bdata\b|analyst|analytics"),
-    ("AI / ML Engineering", r"\b(machine learning|ml|mlops|ai|llms?|deep learning|inference|models?|nlp|computer vision|genai|agentic|scientist)\b"),
-    ("Product & Design", r"\bproduct\b|design|\bux\b|\bui\b"),
-    ("Sales & Marketing", r"sales|account (executive|manager)|business development|marketing|partner|\bgtm\b|go-to-market|solutions? (engineer|architect)|customer success|growth"),
-    ("Software Engineering", r"engineer|developer|\bsre\b|devops|infrastructure|security|architect|programmer"),
+    ("AI / ML", r"machine learning|\bml\b|mlops|\bai\b|llms?|deep learning|nlp|computer vision|genai|generative|"
+                r"research (scientist|engineer)|applied scien|inference|interpretab|alignment"),
+    ("Data", r"\bdata\b|analytics|analyst|business intelligence|\bbi\b|database|\bdba\b"),
+    ("Security", r"security|cyber|infosec|\bsoc\b|penetration|appsec|identity"),
+    ("DevOps & Cloud", r"devops|\bsre\b|site reliability|cloud|infrastructure|platform engineer|kubernetes|systems? engineer|network"),
+    ("QA & Testing", r"\bqa\b|quality|\btest|sdet"),
+    ("IT Support", r"help ?desk|service desk|desktop|technical support|support engineer|sysadmin|system administrator|(?-i:\bIT\b)"),
+    ("Product & Design", r"product (manager|owner|designer|lead)|design|\bux\b|\bui\b|program manager|project manager|scrum"),
+    ("Solutions & Consulting", r"solutions?|sales engineer|implementation|consultant|customer engineer|forward deployed"),
+    ("Software Engineering", r"engineer|developer|programmer|software|front[- ]?end|back[- ]?end|full[- ]?stack|mobile|\bios\b|android|"
+                             r"\bweb\b|architect|firmware|embedded"),
 ]
 
 REGIONS = {
@@ -138,7 +155,7 @@ def tag(job, company):
     title = job["title"]
     where = " · ".join(dict.fromkeys(l.strip() for l in job["locations"] if l and l.strip()))
     remote = job["remote_flag"] or bool(re.search(r"\bremote\b", where, re.I))
-    cat = next((name for name, rx in CATEGORIES if re.search(rx, title, re.I)), "Other roles")
+    cat = next((name for name, rx in CATEGORIES if re.search(rx, title, re.I)), "Other IT roles")
     regions = [r for r, rx in REGIONS.items() if re.search(rx, where, re.I)]
     return {
         "t": title.strip(), "c": company["name"], "l": where or ("Remote" if remote else "Not stated"),
@@ -169,7 +186,7 @@ def collect(company, known):
             if not n["title"] or not n["url"].startswith("http"):
                 continue
             item = tag(n, company)
-            if company.get("ai_company") or item["ai"]:
+            if (IT_ROLE.search(item["t"]) or item["ai"]) and not NOT_IT.search(item["t"]):
                 jobs.append(item)
         return company, ats, jobs, None
     return company, None, None, "not found on Greenhouse, Lever or Ashby"

@@ -1,6 +1,6 @@
-# AI Jobs
+# IT Jobs
 
-A free website that lists AI, machine learning and data jobs from AI companies' own job boards.
+A free website that lists IT and tech jobs (software, data, cloud, security, QA, IT support, product and AI) from tech companies' own job boards.
 "Apply" always opens the job on the company's own site. No sign-up, no cookies, no tracking: nothing about visitors is stored.
 
 ## How it works
@@ -22,7 +22,7 @@ Edit `companies.json`. For each company add its name and the **slug** from its c
 | `https://boards.greenhouse.io/anthropic` or `job-boards.greenhouse.io/anthropic` | `anthropic` |
 | `https://jobs.lever.co/mistral` | `mistral` |
 
-Set `"ai_company": true` for AI companies (all their jobs are listed) or `false` for other companies (only AI/ML roles are listed).
+Only IT and tech roles are kept (sales, HR, finance and similar roles are left out). To change which titles count, edit `IT_ROLE` and `NOT_IT` in `build.py`.
 After each run, the Actions log shows ✓ or ✗ for every company, so you can fix a slug that isn't found.
 
 ## Run it on your PC (optional)
