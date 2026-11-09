@@ -38,10 +38,16 @@ def fetch_greenhouse(slug):
 
 
 def fetch_lever(slug):
-    data = get_json(f"https://api.lever.co/v0/postings/{slug}?mode=json")
-    if isinstance(data, dict):  # {"ok": false, ...} for unknown slugs
-        raise urllib.error.HTTPError("", 404, "not found", None, None)
-    return data
+    for host in ("api.lever.co", "api.eu.lever.co"):  # Lever has a separate EU site
+        try:
+            data = get_json(f"https://{host}/v0/postings/{slug}?mode=json")
+        except urllib.error.HTTPError as e:
+            if e.code in (404, 410, 400):
+                continue
+            raise
+        if isinstance(data, list):
+            return data
+    raise urllib.error.HTTPError("", 404, "not found", None, None)
 
 
 def fetch_ashby(slug):
@@ -248,18 +254,24 @@ def collect(company, known):
         jobs = [tag(normalise("workday", j), company) for j in raw]
         return company, "workday", [j for j in jobs if j["u"].startswith("http")], None
     slug = company["slug"]
-    order = [known[slug]] if slug in known else []
-    order += [a for a in FETCHERS if a not in order]
+    if company.get("ats"):  # pinned in companies.json, e.g. "ats": "ashby"
+        order = [company["ats"]]
+    else:
+        order = [known[slug]] if slug in known else []
+        order += [a for a in FETCHERS if a not in order]
+    tried = []
     for ats in order:
         try:
             raw = FETCHERS[ats](slug)
         except urllib.error.HTTPError as e:
+            tried.append(f"{ats} {e.code}")
             if e.code in (404, 410, 400):
                 continue
             return company, ats, None, f"{ats} error {e.code}"
         except Exception as e:
             return company, ats, None, f"{ats} error {e}"
-        if not raw and ats != order[-1] and slug not in known:
+        if not raw and ats != order[-1]:
+            tried.append(f"{ats} empty")
             continue  # empty board on this system, try the next one
         jobs = []
         for j in raw:
@@ -269,8 +281,9 @@ def collect(company, known):
             item = tag(n, company)
             if is_it(item["t"]):
                 jobs.append(item)
+        company = {**company, "_raw": len(raw)}
         return company, ats, jobs, None
-    return company, None, None, "not found on Greenhouse, Lever or Ashby"
+    return company, None, None, "not found (" + ", ".join(tried) + ")"
 
 
 def build(companies):
@@ -288,7 +301,8 @@ def build(companies):
         seen.update(j["u"] for j in new)
         jobs += new
         summary.append({"name": company["name"], "n": len(new), "src": ats})
-        print(f"  ✓ {company['name']:<22} {len(new):>4} jobs  ({ats})")
+        extra = f", {company['_raw']} jobs on the board but none are IT roles" if not new and company.get("_raw") else ""
+        print(f"  ✓ {company['name']:<22} {len(new):>4} jobs  ({ats}{extra})")
     jobs.sort(key=lambda j: (j["d"], j["t"]), reverse=True)
     return jobs, summary, known
 
