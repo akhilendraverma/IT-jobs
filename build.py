@@ -4,6 +4,7 @@ Sources (public, no login, meant for showing a company's jobs elsewhere):
   Greenhouse  https://boards-api.greenhouse.io/v1/boards/<slug>/jobs?content=true
   Lever       https://api.lever.co/v0/postings/<slug>?mode=json
   Ashby       https://api.ashbyhq.com/posting-api/job-board/<slug>?includeCompensation=true
+  Workday     the job list a company's own myworkdayjobs.com careers page loads (no official feed)
 
 No personal data is collected. Every "Apply" link goes to the company's own job page.
 Run:  python build.py
@@ -51,6 +52,64 @@ def fetch_ashby(slug):
 FETCHERS = {"greenhouse": fetch_greenhouse, "lever": fetch_lever, "ashby": fetch_ashby}
 
 
+# Workday has no official public feed. We read the same job list the company's own careers
+# page loads in a browser: once a day, a page at a time, with a short pause between requests.
+def post_json(url, body, timeout=25):
+    req = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"),
+                                 headers={**UA, "Content-Type": "application/json"}, method="POST")
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def workday_parts(address):
+    """https://statestreet.wd1.myworkdayjobs.com/en-US/Global/job/... -> (base, api)"""
+    m = re.match(r"https?://([a-z0-9-]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([^/?#]+)", address.strip())
+    if not m:
+        raise ValueError(f"not a Workday address: {address}")
+    tenant, wd, site = m.groups()
+    host = f"https://{tenant}.{wd}.myworkdayjobs.com"
+    return f"{host}/{site}", f"{host}/wday/cxs/{tenant}/{site}"
+
+
+def workday_date(posted):
+    """'Posted Today' / 'Posted Yesterday' / 'Posted 3 Days Ago' / 'Posted 30+ Days Ago' -> YYYY-MM-DD"""
+    from datetime import timedelta
+    t = (posted or "").lower()
+    n = 0 if "today" in t else 1 if "yesterday" in t else int(re.search(r"(\d+)", t).group(1)) if re.search(r"\d+", t) else None
+    return "" if n is None else (datetime.now(timezone.utc) - timedelta(days=n)).strftime("%Y-%m-%d")
+
+
+def fetch_workday(address, keep, max_pages=150, pause=0.4):
+    base, api = workday_parts(address)
+    found, offset, total = [], 0, None
+    for _ in range(max_pages):
+        page = post_json(f"{api}/jobs", {"appliedFacets": {}, "limit": 20, "offset": offset, "searchText": ""})
+        posts = page.get("jobPostings") or []
+        if total is None:
+            total = page.get("total") or 0
+        found += [p for p in posts if p.get("title") and p.get("externalPath")]
+        offset += 20
+        if not posts or offset >= total:
+            break
+        time.sleep(pause)
+    wanted = [p for p in found if keep(p["title"])]
+
+    def detail(p):
+        info = {}
+        try:
+            info = get_json(f"{api}{p['externalPath']}").get("jobPostingInfo") or {}
+            time.sleep(pause)
+        except Exception:
+            pass
+        locs = [info.get("location") or p.get("locationsText", "")] + list(info.get("additionalLocations") or [])
+        return {"title": p["title"], "url": info.get("externalUrl") or f"{base}{p['externalPath']}", "locations": locs,
+                "remote": "remote" in (info.get("remoteType") or "").lower(), "date": info.get("startDate") or workday_date(p.get("postedOn")),
+                "text": info.get("jobDescription", "")}
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        return list(pool.map(detail, wanted))
+
+
 # ---------------------------------------------------------------- cleaning
 def text_of(raw):
     t = html.unescape(raw or "")
@@ -95,6 +154,9 @@ def normalise(ats, j):
                     locations=[c.get("location", "")] + list(c.get("allLocations") or []),
                     remote_flag=j.get("workplaceType") == "remote", date=day(j.get("createdAt")), salary=sal,
                     team=c.get("team", ""), text=j.get("descriptionPlain") or j.get("description", ""))
+    if ats == "workday":
+        return dict(title=j["title"], url=j["url"], locations=j["locations"], remote_flag=j["remote"], date=day(j["date"]),
+                    salary="", team="", text=j["text"])
     # ashby
     comp = j.get("compensation") or {}
     return dict(title=j.get("title", ""), url=j.get("jobUrl") or j.get("applyUrl", ""),
@@ -125,8 +187,8 @@ NOT_IT = re.compile(
 CATEGORIES = [
     ("AI / ML", r"machine learning|\bml\b|mlops|\bai\b|llms?|deep learning|nlp|computer vision|genai|generative|"
                 r"research (scientist|engineer)|applied scien|inference|interpretab|alignment"),
-    ("Data", r"\bdata\b|analytics|analyst|business intelligence|\bbi\b|database|\bdba\b"),
     ("Security", r"security|cyber|infosec|\bsoc\b|penetration|appsec|identity"),
+    ("Data", r"\bdata\b|analytics|analyst|business intelligence|\bbi\b|database|\bdba\b"),
     ("DevOps & Cloud", r"devops|\bsre\b|site reliability|cloud|infrastructure|platform engineer|kubernetes|systems? engineer|network"),
     ("QA & Testing", r"\bqa\b|quality|\btest|sdet"),
     ("IT Support", r"help ?desk|service desk|desktop|technical support|support engineer|sysadmin|system administrator|(?-i:\bIT\b)"),
@@ -165,7 +227,18 @@ def tag(job, company):
 
 
 # ---------------------------------------------------------------- main
+def is_it(title):
+    return bool((IT_ROLE.search(title) or AI_ROLE.search(title)) and not NOT_IT.search(title))
+
+
 def collect(company, known):
+    if company.get("workday"):
+        try:
+            raw = fetch_workday(company["workday"], is_it)
+        except Exception as e:
+            return company, "workday", None, f"workday error {e}"
+        jobs = [tag(normalise("workday", j), company) for j in raw]
+        return company, "workday", [j for j in jobs if j["u"].startswith("http")], None
     slug = company["slug"]
     order = [known[slug]] if slug in known else []
     order += [a for a in FETCHERS if a not in order]
@@ -186,7 +259,7 @@ def collect(company, known):
             if not n["title"] or not n["url"].startswith("http"):
                 continue
             item = tag(n, company)
-            if (IT_ROLE.search(item["t"]) or item["ai"]) and not NOT_IT.search(item["t"]):
+            if is_it(item["t"]):
                 jobs.append(item)
         return company, ats, jobs, None
     return company, None, None, "not found on Greenhouse, Lever or Ashby"
@@ -201,7 +274,8 @@ def build(companies):
         if err:
             print(f"  ✗ {company['name']:<22} {err}")
             continue
-        known[company["slug"]] = ats
+        if company.get("slug"):
+            known[company["slug"]] = ats
         new = [j for j in found if j["u"] not in seen]
         seen.update(j["u"] for j in new)
         jobs += new

@@ -22,6 +22,14 @@ Edit `companies.json`. For each company add its name and the **slug** from its c
 | `https://boards.greenhouse.io/anthropic` or `job-boards.greenhouse.io/anthropic` | `anthropic` |
 | `https://jobs.lever.co/mistral` | `mistral` |
 
+**Companies on Workday** (job addresses like `statestreet.wd1.myworkdayjobs.com/Global/job/...`): copy the address up to the
+first part after `.com/` and add it with `workday` instead of `slug`:
+
+`{"name": "State Street", "workday": "https://statestreet.wd1.myworkdayjobs.com/Global"}`
+
+Workday has no official feed, so the build reads the same job list the company's own careers page loads, once a day with short pauses.
+If a company changes its careers site it may show ✗ until the address is updated.
+
 Only IT and tech roles are kept (sales, HR, finance and similar roles are left out). To change which titles count, edit `IT_ROLE` and `NOT_IT` in `build.py`.
 After each run, the Actions log shows ✓ or ✗ for every company, so you can fix a slug that isn't found.
 

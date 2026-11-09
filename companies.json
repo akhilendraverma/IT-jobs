@@ -1,285 +1,76 @@
 {
- "_help": "Each company: its name and the slug from its careers page address (jobs.ashbyhq.com/<slug>, boards.greenhouse.io/<slug> or jobs.lever.co/<slug>). Only IT and tech roles are kept. The build tries Greenhouse, Lever and Ashby for each slug; the Actions log shows which companies worked (✓) and which were not found (✗).",
- "companies": [
-  {
-   "name": "OpenAI",
-   "slug": "openai"
-  },
-  {
-   "name": "Anthropic",
-   "slug": "anthropic"
-  },
-  {
-   "name": "Google DeepMind",
-   "slug": "deepmind"
-  },
-  {
-   "name": "Mistral AI",
-   "slug": "mistral"
-  },
-  {
-   "name": "Cohere",
-   "slug": "cohere"
-  },
-  {
-   "name": "Perplexity",
-   "slug": "perplexity"
-  },
-  {
-   "name": "xAI",
-   "slug": "xai"
-  },
-  {
-   "name": "Scale AI",
-   "slug": "scaleai"
-  },
-  {
-   "name": "ElevenLabs",
-   "slug": "elevenlabs"
-  },
-  {
-   "name": "Synthesia",
-   "slug": "synthesia"
-  },
-  {
-   "name": "Hugging Face",
-   "slug": "huggingface"
-  },
-  {
-   "name": "Databricks",
-   "slug": "databricks"
-  },
-  {
-   "name": "Snowflake",
-   "slug": "snowflake"
-  },
-  {
-   "name": "Stripe",
-   "slug": "stripe"
-  },
-  {
-   "name": "Intercom",
-   "slug": "intercom"
-  },
-  {
-   "name": "Tines",
-   "slug": "tines"
-  },
-  {
-   "name": "Wayflyer",
-   "slug": "wayflyer"
-  },
-  {
-   "name": "Flipdish",
-   "slug": "flipdish"
-  },
-  {
-   "name": "Workhuman",
-   "slug": "workhuman"
-  },
-  {
-   "name": "Squarespace",
-   "slug": "squarespace"
-  },
-  {
-   "name": "Zendesk",
-   "slug": "zendesk"
-  },
-  {
-   "name": "HubSpot",
-   "slug": "hubspot"
-  },
-  {
-   "name": "Cloudflare",
-   "slug": "cloudflare"
-  },
-  {
-   "name": "Datadog",
-   "slug": "datadog"
-  },
-  {
-   "name": "GitLab",
-   "slug": "gitlab"
-  },
-  {
-   "name": "Twilio",
-   "slug": "twilio"
-  },
-  {
-   "name": "MongoDB",
-   "slug": "mongodb"
-  },
-  {
-   "name": "Elastic",
-   "slug": "elastic"
-  },
-  {
-   "name": "Okta",
-   "slug": "okta"
-  },
-  {
-   "name": "Dropbox",
-   "slug": "dropbox"
-  },
-  {
-   "name": "Figma",
-   "slug": "figma"
-  },
-  {
-   "name": "Airtable",
-   "slug": "airtable"
-  },
-  {
-   "name": "Asana",
-   "slug": "asana"
-  },
-  {
-   "name": "Notion",
-   "slug": "notion"
-  },
-  {
-   "name": "Linear",
-   "slug": "linear"
-  },
-  {
-   "name": "Ramp",
-   "slug": "ramp"
-  },
-  {
-   "name": "Coinbase",
-   "slug": "coinbase"
-  },
-  {
-   "name": "Robinhood",
-   "slug": "robinhood"
-  },
-  {
-   "name": "Reddit",
-   "slug": "reddit"
-  },
-  {
-   "name": "Pinterest",
-   "slug": "pinterest"
-  },
-  {
-   "name": "Discord",
-   "slug": "discord"
-  },
-  {
-   "name": "Duolingo",
-   "slug": "duolingo"
-  },
-  {
-   "name": "Airbnb",
-   "slug": "airbnb"
-  },
-  {
-   "name": "Lyft",
-   "slug": "lyft"
-  },
-  {
-   "name": "Spotify",
-   "slug": "spotify"
-  },
-  {
-   "name": "Palantir",
-   "slug": "palantir"
-  },
-  {
-   "name": "Waymo",
-   "slug": "waymo"
-  },
-  {
-   "name": "Postman",
-   "slug": "postman"
-  },
-  {
-   "name": "BrowserStack",
-   "slug": "browserstack"
-  },
-  {
-   "name": "Razorpay",
-   "slug": "razorpay"
-  },
-  {
-   "name": "PhonePe",
-   "slug": "phonepe"
-  },
-  {
-   "name": "CRED",
-   "slug": "cred"
-  },
-  {
-   "name": "Meesho",
-   "slug": "meesho"
-  },
-  {
-   "name": "Groww",
-   "slug": "groww"
-  },
-  {
-   "name": "Zepto",
-   "slug": "zepto"
-  },
-  {
-   "name": "Swiggy",
-   "slug": "swiggy"
-  },
-  {
-   "name": "Rubrik",
-   "slug": "rubrik"
-  },
-  {
-   "name": "Nutanix",
-   "slug": "nutanix"
-  },
-  {
-   "name": "Confluent",
-   "slug": "confluent"
-  },
-  {
-   "name": "HashiCorp",
-   "slug": "hashicorp"
-  },
-  {
-   "name": "Grafana Labs",
-   "slug": "grafanalabs"
-  },
-  {
-   "name": "Vercel",
-   "slug": "vercel"
-  },
-  {
-   "name": "Supabase",
-   "slug": "supabase"
-  },
-  {
-   "name": "Replit",
-   "slug": "replit"
-  },
-  {
-   "name": "Canva",
-   "slug": "canva"
-  },
-  {
-   "name": "Atlassian",
-   "slug": "atlassian"
-  },
-  {
-   "name": "Revolut",
-   "slug": "revolut"
-  },
-  {
-   "name": "Monzo",
-   "slug": "monzo"
-  },
-  {
-   "name": "Wise",
-   "slug": "wise"
-  },
-  {
-   "name": "Deliveroo",
-   "slug": "deliveroo"
-  }
- ]
+  "_help": "Each company: its name and the slug from its careers page address (jobs.ashbyhq.com/<slug>, boards.greenhouse.io/<slug> or jobs.lever.co/<slug>). Only IT and tech roles are kept. The build tries Greenhouse, Lever and Ashby for each slug; the Actions log shows which companies worked (✓) and which were not found (✗). For companies on Workday, use \"workday\" with the careers address up to the site name instead of a slug, e.g. {\"name\": \"State Street\", \"workday\": \"https://statestreet.wd1.myworkdayjobs.com/Global\"}.",
+  "companies": [
+    {"name": "OpenAI", "slug": "openai"},
+    {"name": "Anthropic", "slug": "anthropic"},
+    {"name": "Google DeepMind", "slug": "deepmind"},
+    {"name": "Mistral AI", "slug": "mistral"},
+    {"name": "Cohere", "slug": "cohere"},
+    {"name": "Perplexity", "slug": "perplexity"},
+    {"name": "xAI", "slug": "xai"},
+    {"name": "Scale AI", "slug": "scaleai"},
+    {"name": "ElevenLabs", "slug": "elevenlabs"},
+    {"name": "Synthesia", "slug": "synthesia"},
+    {"name": "Hugging Face", "slug": "huggingface"},
+    {"name": "Databricks", "slug": "databricks"},
+    {"name": "Snowflake", "slug": "snowflake"},
+    {"name": "Stripe", "slug": "stripe"},
+    {"name": "Intercom", "slug": "intercom"},
+    {"name": "Tines", "slug": "tines"},
+    {"name": "Wayflyer", "slug": "wayflyer"},
+    {"name": "Flipdish", "slug": "flipdish"},
+    {"name": "Workhuman", "slug": "workhuman"},
+    {"name": "Squarespace", "slug": "squarespace"},
+    {"name": "Zendesk", "slug": "zendesk"},
+    {"name": "HubSpot", "slug": "hubspot"},
+    {"name": "Cloudflare", "slug": "cloudflare"},
+    {"name": "Datadog", "slug": "datadog"},
+    {"name": "GitLab", "slug": "gitlab"},
+    {"name": "Twilio", "slug": "twilio"},
+    {"name": "MongoDB", "slug": "mongodb"},
+    {"name": "Elastic", "slug": "elastic"},
+    {"name": "Okta", "slug": "okta"},
+    {"name": "Dropbox", "slug": "dropbox"},
+    {"name": "Figma", "slug": "figma"},
+    {"name": "Airtable", "slug": "airtable"},
+    {"name": "Asana", "slug": "asana"},
+    {"name": "Notion", "slug": "notion"},
+    {"name": "Linear", "slug": "linear"},
+    {"name": "Ramp", "slug": "ramp"},
+    {"name": "Coinbase", "slug": "coinbase"},
+    {"name": "Robinhood", "slug": "robinhood"},
+    {"name": "Reddit", "slug": "reddit"},
+    {"name": "Pinterest", "slug": "pinterest"},
+    {"name": "Discord", "slug": "discord"},
+    {"name": "Duolingo", "slug": "duolingo"},
+    {"name": "Airbnb", "slug": "airbnb"},
+    {"name": "Lyft", "slug": "lyft"},
+    {"name": "Spotify", "slug": "spotify"},
+    {"name": "Palantir", "slug": "palantir"},
+    {"name": "Waymo", "slug": "waymo"},
+    {"name": "Postman", "slug": "postman"},
+    {"name": "BrowserStack", "slug": "browserstack"},
+    {"name": "Razorpay", "slug": "razorpay"},
+    {"name": "PhonePe", "slug": "phonepe"},
+    {"name": "CRED", "slug": "cred"},
+    {"name": "Meesho", "slug": "meesho"},
+    {"name": "Groww", "slug": "groww"},
+    {"name": "Zepto", "slug": "zepto"},
+    {"name": "Swiggy", "slug": "swiggy"},
+    {"name": "Rubrik", "slug": "rubrik"},
+    {"name": "Nutanix", "slug": "nutanix"},
+    {"name": "Confluent", "slug": "confluent"},
+    {"name": "HashiCorp", "slug": "hashicorp"},
+    {"name": "Grafana Labs", "slug": "grafanalabs"},
+    {"name": "Vercel", "slug": "vercel"},
+    {"name": "Supabase", "slug": "supabase"},
+    {"name": "Replit", "slug": "replit"},
+    {"name": "Canva", "slug": "canva"},
+    {"name": "Atlassian", "slug": "atlassian"},
+    {"name": "Revolut", "slug": "revolut"},
+    {"name": "Monzo", "slug": "monzo"},
+    {"name": "Wise", "slug": "wise"},
+    {"name": "Deliveroo", "slug": "deliveroo"},
+    {"name": "State Street", "workday": "https://statestreet.wd1.myworkdayjobs.com/Global"}
+  ]
 }
