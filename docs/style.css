@@ -73,7 +73,28 @@ mark { background: #FFF1A8; color: inherit; border-radius: 3px; }
 .cols p { color: var(--ink2); font-size: 15px; }
 .foot { border-top: 1px solid var(--line); color: var(--soft); font-size: 13px; padding: 20px 28px 30px; max-width: 1060px; margin: 0 auto; }
 
+/* ads */
+.promo { position: relative; display: flex; align-items: center; gap: 16px; text-decoration: none; color: #fff; border-radius: 16px; padding: 22px 18px 16px;
+  background: linear-gradient(120deg, #1B1F4A, #0E1726); border: 1px solid #262C55; transition: transform .15s, box-shadow .15s; }
+.promo:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(14, 23, 38, .25); }
+.promo-label { position: absolute; top: 7px; left: 18px; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #8F9BB3; }
+.promo img { width: 64px; height: 64px; border-radius: 14px; flex: none; object-fit: cover; }
+.promo img.book { width: 54px; height: 81px; border-radius: 3px 6px 6px 3px; box-shadow: 0 0 0 1px rgba(255, 255, 255, .35), 2px 3px 10px rgba(0, 0, 0, .45); }
+.promo-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.promo-kicker { font-size: 11.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #2EE6C5; }
+.promo-text strong { font-size: 18px; line-height: 1.25; }
+.promo-text strong[lang="hi"] { font-family: "Nirmala UI", "Mangal", "Noto Sans Devanagari", sans-serif; }
+.promo-copy { font-size: 14px; color: #C9D1E0; }
+.promo-cta { flex: none; background: var(--violet); color: #fff; font-weight: 700; font-size: 14px; border-radius: 10px; padding: 9px 14px; white-space: nowrap; }
+.promos { max-width: 1060px; margin: 0 auto; padding: 0 20px 10px; }
+.promos h2 { font-size: 22px; letter-spacing: -.4px; }
+.promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.promo-grid .promo { flex-direction: column; align-items: flex-start; }
+.promo-grid .promo-cta { margin-top: auto; }
+
 @media (max-width: 720px) {
+  .promo { flex-wrap: wrap; }
+  .promo-cta { width: 100%; text-align: center; }
   .top { padding: 14px 16px; }
   .hero { padding: 30px 16px 46px; }
   .search button { padding: 0 16px; }

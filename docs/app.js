@@ -4,7 +4,18 @@
   const E = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const PAGE = 40;
   const REGIONS = ["Ireland", "UK", "Europe", "India", "USA", "Canada", "Asia-Pacific"];
-  let all = [], shown = PAGE;
+  let all = [], shown = PAGE, ads = [];
+
+  // ---- house ads (edit docs/ads.json)
+  function promo(ad) {
+    const a = document.createElement("a");
+    a.className = "promo"; a.href = ad.url; a.target = "_blank"; a.rel = "sponsored noopener";
+    a.innerHTML = `<span class="promo-label">Advertisement</span>
+      ${ad.image ? `<img class="${ad.book ? "book" : ""}" src="${E(ad.image)}" alt="" loading="lazy">` : ""}
+      <span class="promo-text"><span class="promo-kicker">${E(ad.kicker)}</span><strong${ad.lang ? ` lang="${E(ad.lang)}"` : ""}>${E(ad.title)}</strong>
+      <span class="promo-copy">${E(ad.text)}</span></span><span class="promo-cta">${E(ad.cta)} ↗</span>`;
+    return a;
+  }
   const st = { q: "", r: "", k: "", co: "", d: "", ai: false };
 
   // ---- state in the address bar, so a search can be shared
@@ -73,7 +84,9 @@
     }
     const tpl = $("#card").content;
     const frag = document.createDocumentFragment();
-    for (const j of hits.slice(0, shown)) {
+    const day = Math.floor(Date.now() / 864e5);
+    hits.slice(0, shown).forEach((j, i) => {
+      if (ads.length && i > 0 && i % 12 === 6) frag.append(promo(ads[(day + Math.floor(i / 12)) % ads.length]));
       const n = tpl.cloneNode(true);
       n.querySelector(".title").innerHTML = hi(j.t);
       n.querySelector(".company").textContent = j.c;
@@ -87,7 +100,8 @@
       a.textContent = `Apply on ${j.c.length > 18 ? "company site" : j.c} ↗`;
       a.title = "Opens the job on the company's own website";
       frag.append(n);
-    }
+    });
+    if (ads.length && hits.length <= 6) frag.append(promo(ads[day % ads.length]));
     list.append(frag);
     $("#more").hidden = hits.length <= shown;
     $("#more").textContent = `Show more jobs (${(hits.length - shown).toLocaleString("en-IE")} more)`;
@@ -127,6 +141,10 @@
     $("#regions").addEventListener("click", (e) => { const b = e.target.closest("[data-r]"); if (b) set({ r: b.dataset.r }); });
     $("#reset").onclick = () => { $("#q").value = ""; $("#cat").value = ""; $("#co").value = ""; $("#days").value = ""; $("#ai").checked = false; set({ q: "", r: "", k: "", co: "", d: "", ai: false }); };
     $("#more").onclick = () => { shown += PAGE; draw(); };
+    try {
+      ads = (await (await fetch("ads.json", { cache: "no-cache" })).json()).ads || [];
+      if (ads.length) { ads.forEach((ad) => $("#promo-grid").append(promo(ad))); $("#promos").hidden = false; }
+    } catch { ads = []; }
     draw();
   }
   start();

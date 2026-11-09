@@ -1,0 +1,31 @@
+{
+  "ads": [
+    {
+      "image": "ads/book-app-support.png",
+      "book": true,
+      "kicker": "Interview prep · Kindle ebook",
+      "title": "Application Support Interview Handbook",
+      "text": "Going for an application or production support role? Prepare for the interview with this handbook.",
+      "cta": "View on Amazon",
+      "url": "https://www.amazon.com/dp/B0HNGSYFGZ"
+    },
+    {
+      "image": "ads/newspaper.png",
+      "kicker": "Daily news",
+      "title": "IrishIndiaTimes",
+      "text": "Today's news for Indians in Ireland, with Ireland, India and Asia headlines in one place. Free, every day.",
+      "cta": "Read today's paper",
+      "url": "https://irishindiatimes.com/"
+    },
+    {
+      "image": "ads/book-kuch-ghar.png",
+      "book": true,
+      "kicker": "New Hindi book · Kindle",
+      "title": "कुछ घर दोबारा नहीं मिलते",
+      "lang": "hi",
+      "text": "A new Hindi book, now on Amazon Kindle. Read it on your phone, tablet or Kindle.",
+      "cta": "View on Amazon",
+      "url": "https://www.amazon.com/dp/B0HNDPBMQ5"
+    }
+  ]
+}
