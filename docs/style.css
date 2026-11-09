@@ -20,7 +20,8 @@ button, input, select { font: inherit; color: inherit; }
 .hero h1 span { background: linear-gradient(90deg, var(--violet2), #2EE6C5); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .sub { color: #B8C2D6; max-width: 640px; margin: 0 auto 26px; font-size: 17px; }
 .search { display: flex; max-width: 720px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 6px; box-shadow: 0 18px 50px rgba(0, 0, 0, .35); }
-.search input { flex: 1; border: 0; padding: 12px 14px; font-size: 17px; outline: none; background: transparent; min-width: 0; }
+.search input { flex: 1; border: 0; padding: 12px 14px; font-size: 17px; outline: none; background: transparent; min-width: 0; color: var(--ink); caret-color: var(--violet); }
+.search input::placeholder { color: #8A94A8; }
 .search button { border: 0; background: var(--violet); color: #fff; font-weight: 700; padding: 0 24px; border-radius: 12px; cursor: pointer; }
 .search button:hover { background: #5A3BE6; }
 .stats { color: #9AA6BD; margin: 16px 0 0; font-size: 14px; }
