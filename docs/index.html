@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Jobs: every AI job, straight from the company</title>
+<meta name="description" content="Free search of AI, machine learning and data jobs from AI companies' own job boards. Apply directly on the company website. No sign-up, no tracking.">
+<meta name="theme-color" content="#0E1726">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="./"><img src="icon.svg" alt=""><span>AI&nbsp;Jobs</span></a>
+  <a class="about-link" href="#about">About</a>
+</header>
+
+<section class="hero">
+  <h1>Every AI job, <span>straight from the company.</span></h1>
+  <p class="sub">Search AI, machine learning and data jobs from the job boards of leading AI companies. Click Apply and you go straight to the company's own page.</p>
+  <form class="search" id="search" role="search">
+    <input id="q" type="search" placeholder="Job title, skill or company, e.g. LLM engineer, research, Dublin" autocomplete="off" aria-label="Search jobs">
+    <button type="submit">Search</button>
+  </form>
+  <p class="stats" id="stats">Loading jobs…</p>
+</section>
+
+<main>
+  <div class="filters" id="filters">
+    <div class="chips" id="regions" aria-label="Where"></div>
+    <div class="row">
+      <label>Role <select id="cat"><option value="">All roles</option></select></label>
+      <label>Company <select id="co"><option value="">All companies</option></select></label>
+      <label>Posted <select id="days"><option value="">Any time</option><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></label>
+      <label class="toggle"><input type="checkbox" id="ai"> AI/ML roles only</label>
+      <button class="link" id="reset" type="button">Clear filters</button>
+    </div>
+  </div>
+  <p class="count" id="count"></p>
+  <div id="list" class="list"></div>
+  <div class="more"><button id="more" class="btn ghost" hidden>Show more jobs</button></div>
+</main>
+
+<section class="about" id="about">
+  <h2>About AI Jobs</h2>
+  <div class="cols">
+    <div><h3>Where the jobs come from</h3><p>Every listing comes from a company's own public job board on Greenhouse, Lever or Ashby. The list is refreshed every day, and jobs disappear once the company closes them.</p></div>
+    <div><h3>Apply directly</h3><p>AI Jobs is only a search page. "Apply" opens the job on the company's own site, and you apply with them. We never see your application.</p></div>
+    <div><h3>No data kept</h3><p>No sign-up, no cookies, no tracking, no ads. Your searches stay in your browser.</p></div>
+  </div>
+</section>
+
+<footer class="foot">
+  <p><b>Disclaimer:</b> AI Jobs is an independent aggregator and is not connected with the companies listed, LinkedIn, Greenhouse, Lever or Ashby.
+  Job titles, locations, salaries and short descriptions are shown as published on each company's public job board, and may change or close at any time.
+  Always check the full details on the company's site before applying. Company names belong to their owners.</p>
+  <p id="sources"></p>
+</footer>
+
+<template id="card">
+  <article class="job">
+    <div class="job-main">
+      <h3 class="title"></h3>
+      <p class="meta"><b class="company"></b> <span class="where"></span></p>
+      <p class="tags"></p>
+      <p class="snip"></p>
+    </div>
+    <div class="job-side">
+      <span class="when"></span>
+      <a class="btn apply" target="_blank" rel="noopener nofollow"></a>
+    </div>
+  </article>
+</template>
+<script src="app.js"></script>
+</body>
+</html>
