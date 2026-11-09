@@ -3,7 +3,7 @@
   const $ = (s) => document.querySelector(s);
   const E = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const PAGE = 40;
-  const REGIONS = ["Ireland", "UK", "Europe", "India", "USA", "Canada", "Asia-Pacific"];
+  const REGIONS = ["Ireland", "UK", "Europe", "India", "Australia", "USA", "Canada", "Asia-Pacific"];
   let all = [], shown = PAGE, ads = [];
 
   // ---- house ads (edit docs/ads.json)
