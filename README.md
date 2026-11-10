@@ -1,38 +1,23 @@
-# IT Jobs
+# IT Interview Prep
 
-A free website that lists IT and tech jobs (software, data, cloud, security, QA, IT support, product and AI) from tech companies' own job boards.
-"Apply" always opens the job on the company's own site. No sign-up, no cookies, no tracking: nothing about visitors is stored.
+Free IT interview practice: assessments in 15 areas with a personal focus report, plus HackerRank-style coding challenges that run in the browser.
 
-## How it works
+- **Assessments:** UNIX/Linux, SQL, Windows Server, AWS, Azure, Python, Java, JavaScript, AI & ML, Software Testing, QA, Project Management, Production Support, DevOps and SRE (590 hand-written questions, each tagged by sub-topic and level). UNIX, SQL, AWS and AI have 80–96 hand-written questions each, plus unlimited generated practice questions (chmod, cron, log pipelines, SQL results on sample data, subnet maths, availability, ML metrics, token cost) whose answers are worked out in code.
+- **Report:** score by topic, sub-topic and difficulty; focus areas with study tips and links; one-click practice of weak areas; print/PDF.
+- **Coding:** 13 Python/JavaScript problems and 8 SQL problems, with sample and hidden tests. Python runs with Pyodide, SQL with sql.js (SQLite), JavaScript in a Web Worker, all loaded from the jsDelivr CDN.
+- **Privacy:** no accounts, no cookies, no tracking. Results and code drafts are stored only in the visitor's browser (localStorage).
 
-- `build.py` reads each company's **public** job board (Greenhouse, Lever or Ashby: the systems companies use for their careers pages)
-  and writes `docs/jobs.json`. It uses only Python's standard library.
-- GitHub Actions runs it every morning (`.github/workflows/update-jobs.yml`) and saves the new list.
-- GitHub Pages shows the website from the `docs` folder. Searching and filtering happen in the visitor's browser.
+## Files
 
-LinkedIn, Indeed and Glassdoor are **not** used: their terms forbid copying their listings automatically.
+- `index.html`, `css/style.css`, `icon.svg`
+- `js/core.js`: registry and helpers
+- `js/bank/*.js`: question banks. Each row is `[sub-topic, level, question, correct answer, [3 wrong answers], explanation, optional code]`. The correct answer is written first; options are shuffled on screen.
+- `js/gen.js`: question generators. Each one builds a fresh question and computes the right answer, so tests in UNIX, SQL, AWS and AI never run out.
+- `js/challenges.js`: coding challenges (tests, starter code, model solutions)
+- `js/runner.js`: runs Python, JavaScript and SQL in the browser
+- `js/app.js`: pages and logic
+- `ads.json` and `ads/`: the "Also from us" boxes
 
-## Add or remove companies
+## Publish on GitHub Pages
 
-Edit `companies.json`. For each company add its name and the **slug** from its careers page address:
-
-| Careers page address | slug |
-| --- | --- |
-| `https://jobs.ashbyhq.com/openai` | `openai` |
-| `https://boards.greenhouse.io/anthropic` or `job-boards.greenhouse.io/anthropic` | `anthropic` |
-| `https://jobs.lever.co/mistral` | `mistral` |
-
-**Companies on Workday** (job addresses like `statestreet.wd1.myworkdayjobs.com/Global/job/...`): copy the address up to the
-first part after `.com/` and add it with `workday` instead of `slug`:
-
-`{"name": "State Street", "workday": "https://statestreet.wd1.myworkdayjobs.com/Global"}`
-
-Workday has no official feed, so the build reads the same job list the company's own careers page loads, once a day with short pauses.
-If a company changes its careers site it may show ✗ until the address is updated.
-
-Only IT and tech roles are kept (sales, HR, finance and similar roles are left out). To change which titles count, edit `IT_ROLE` and `NOT_IT` in `build.py`.
-After each run, the Actions log shows ✓ or ✗ for every company, so you can fix a slug that isn't found.
-
-## Run it on your PC (optional)
-
-`python build.py` then open `docs/index.html` through a local server: `python -m http.server -d docs 8000` → http://localhost:8000
+Upload everything to a public repository, then Settings → Pages → Deploy from a branch → main → / (root).
